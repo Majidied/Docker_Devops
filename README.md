@@ -62,9 +62,8 @@
 
 1. Build image
 
-<div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
 
-```powershell
+```zsh
 $ docker build -t api:1.0 simple_api/
 [+] Building 121.1s (11/11) FINISHED                                                                                                       docker:desktop-linux 
  => [internal] load build definition from Dockerfile                                                                                                       0.0s 
@@ -104,4 +103,3 @@ $ docker build -t api:1.0 simple_api/
  => => extracting sha256:0ebfe287e9761b9b7dd1703470ff3473a62fe75238f3de01282165f8725968af                                                                  0.2s 
  => => extracting sha256:819d305a9b2210516eaf5929daf6caa015f1f0ffa8be96252cb05d0f283bfff5                                                                  0.5s 
 ```
-</div>
