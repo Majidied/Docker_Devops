@@ -1,5 +1,38 @@
 # Compte Rendu - Mini Projet Docker
 
+## Équipe
+
+<div align="center">
+<table>
+    <tr>
+        <th><h3>👨‍🎓 Étudiants</h3></th>
+        <th><h3>👨‍🏫 Encadré par</h3></th>
+    </tr>
+    <tr>
+        <td>
+            MAJIDI Mohammed<br>
+            AMAHOUCH Assia<br>
+            AATIQ Sawssan
+        </td>
+        <td align="center">Pr. RABHI Loubna</td>
+    </tr>
+</table>
+</div>
+
+## L'objectif
+
+Ce mini-projet Docker a pour objectifs principaux :
+
+1. **Containerisation d'une application** : Mettre en pratique les concepts fondamentaux de Docker en containerisant une API Python simple qui gère une liste d'étudiants.
+
+2. **Orchestration multi-services** : Utiliser Docker Compose pour orchestrer plusieurs services interdépendants, notamment un frontend web PHP et une API backend.
+
+3. **Gestion des données persistantes** : Implémenter des volumes Docker pour garantir la persistance des données au-delà du cycle de vie des conteneurs.
+
+4. **Mise en place d'un registre privé** : Créer et utiliser un registre Docker privé pour stocker et distribuer nos images personnalisées.
+
+Ce projet nous permettra d'acquérir des compétences essentielles en DevOps, telles que la création d'images Docker optimisées, la configuration réseau entre conteneurs et la gestion du cycle de vie des applications containerisées.
+
 ---
 
 ## Création de l'Image Docker
@@ -165,6 +198,7 @@ $ curl -u root:root -X GET http://localhost:5000/supmit/api/v1.0/get_student_age
   }
 }
 ```
+---
 
 ## Création du Fichier Docker-compose
 
@@ -204,6 +238,8 @@ networks:
 </details>
 
 > Ce fichier docker-compose définit deux services : un site web PHP utilisant Apache et notre API Python. Il configure les variables d'environnement, les volumes pour la persistance des données, les dépendances entre services, et expose les ports nécessaires. Un réseau bridge personnalisé est également créé pour faciliter la communication entre les services.
+
+---
 
 ## Exécution avec Docker Compose
 
@@ -254,6 +290,8 @@ website-1     | 172.20.0.1 - - [23/Mar/2025:16:14:35 +0000] "GET / HTTP/1.1" 200
 
 > L'image montre l'interface web qui interagit avec notre API. Cette page affiche les données des étudiants avec leurs âges, récupérées depuis l'API Python, démontrant que l'architecture multi-conteneurs fonctionne correctement.
 
+---
+
 ## Mise en Place d'un Registre Docker Privé
 
 ```yml
@@ -288,6 +326,8 @@ volumes:
 ```
 
 > Ce fichier docker-compose configure un registre Docker privé avec une interface utilisateur web. Il définit deux services : un registre Docker standard sur le port 5000 avec les en-têtes CORS appropriés, et une interface utilisateur graphique accessible sur le port 8080. Un volume persistant "registry-data" est créé pour stocker les images Docker de manière durable.
+
+---
 
 ## Execution et test du docker compose registry
 
@@ -366,6 +406,8 @@ $ curl http://localhost:5000/v2/_catalog
 </div>
 
 > L'image montre l'interface utilisateur web du registre Docker, confirmant visuellement que notre image api:1.0 a été correctement poussée et est maintenant stockée dans notre registre privé.
+
+---
 
 ## Conclusion
 
