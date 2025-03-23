@@ -62,8 +62,7 @@
 
 1. Build image
 
-
-```bash
+```powershell
 $ docker build -t api:1.0 simple_api/
 [+] Building 121.1s (11/11) FINISHED                                                                                                       docker:desktop-linux 
  => [internal] load build definition from Dockerfile                                                                                                       0.0s 
