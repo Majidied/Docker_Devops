@@ -153,10 +153,11 @@ $ curl -u root:root -X GET http://localhost:5000/supmit/api/v1.0/get_student_age
   }
 }
 ```
+
 ## Creation du fichier Docker-compose
 
 <details>
-  <summary>Click to expand</summary>
+  <summary>Clicker pour afficher le code <strong>docker-compose.yml</strong></summary>
 
 ```yml
 version: "3.8"
@@ -188,5 +189,4 @@ networks:
     driver: bridge
 
 ```
-
 </details>
