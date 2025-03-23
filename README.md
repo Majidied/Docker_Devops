@@ -103,7 +103,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '/data/student_age.json'
 
 - Deuxième tentative après avoir copié le fichier dans le conteneur
 
-```zsh
+```powershell
 dell@DESKTOP-1FIQQ8A MINGW64 ~/Documents/Devops/student_list (majidi)
 $ docker cp simple_api/student_age.json mytest:/data
 Successfully copied 2.05kB to mytest:/data
@@ -116,3 +116,26 @@ $ docker ps
 CONTAINER ID   IMAGE               COMMAND                  CREATED          STATUS          PORTS                    NAMES
 b70bea561599   api:1.0             "python3 student_age…"   16 minutes ago   Up 14 minutes   0.0.0.0:5000->5000/tcp   mytest
 ```
+
+3. Verification du logs
+
+```powershell
+$ docker logs mytest
+Traceback (most recent call last):
+  File "student_age.py", line 33, in <module>
+    student_age_file = open(student_age_file_path, "r")
+FileNotFoundError: [Errno 2] No such file or directory: '/data/student_age.json'
+ * Serving Flask app 'student_age' (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on all addresses.
+   WARNING: This is a development server. Do not use it in a production deployment.
+ * Running on http://172.17.0.4:5000/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 127-926-424
+```
+
+4. Test avec la commande `curl`:
