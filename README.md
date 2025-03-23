@@ -2,9 +2,9 @@
 
 ---
 
-## Création du fichier Dockerfile
+## Création de l'Image Docker
 
-1. **Image de base :** _Utilisez l'image `python:3.8-buster` pour garantir un environnement Python 3.8 cohérent sur Debian Buster._
+1.  **Image de Base :** _Utilisation de `python:3.8-buster` pour un environnement Python 3.8 sur Debian Buster._
 
 ```Dockerfile
     FROM python:3.8-buster
@@ -66,9 +66,9 @@
 
 ---
 
-## Test de l'image
+## Test de l'image Docker
 
-1. Construction de l'image
+1. **Construction de l'image**
 
 ```powershell
 $ docker build -t api:1.0 simple_api/
@@ -98,7 +98,7 @@ $ docker build -t api:1.0 simple_api/
 ```
 > Cette commande construit notre image Docker nommée "api" avec le tag "1.0" en utilisant les fichiers du répertoire simple_api. Le processus télécharge et extrait l'image de base Python et exécute toutes les instructions du Dockerfile.
 
-2. Exécution du conteneur
+2. **Exécution du conteneur**
 
 - Première tentative (Erreur liée à un fichier manquant `student_age.json`)
 
@@ -128,7 +128,7 @@ b70bea561599   api:1.0             "python3 student_age…"   16 minutes ago   U
 ```
 > Ces commandes résolvent le problème en copiant le fichier JSON nécessaire dans le conteneur, puis en démarrant le conteneur. La commande docker ps confirme que le conteneur est en cours d'exécution et que le port 5000 est correctement mappé.
 
-3. Verification du logs
+3. **Vérification des logs**
 
 ```powershell
 $ docker logs mytest
@@ -150,7 +150,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '/data/student_age.json'
 ```
 > Les logs montrent l'erreur initiale due au fichier manquant, puis indiquent que l'application Flask a démarré correctement après le redémarrage du conteneur. L'API est maintenant en cours d'exécution en mode debug et accessible via l'adresse 172.17.0.4:5000.
 
-4. Test avec la commande `curl`:
+4. **Test avec la commande `curl`**
 
 ```powershell
 $ curl -u root:root -X GET http://localhost:5000/supmit/api/v1.0/get_student_ages
@@ -166,7 +166,7 @@ $ curl -u root:root -X GET http://localhost:5000/supmit/api/v1.0/get_student_age
 }
 ```
 
-## Creation du fichier Docker-compose
+## Création du Fichier Docker-compose
 
 <details>
   <summary>Clicker pour afficher le code <strong><a href="./docker-compose.yml">docker-compose.yml</a></strong></summary>
@@ -205,8 +205,10 @@ networks:
 
 > Ce fichier docker-compose définit deux services : un site web PHP utilisant Apache et notre API Python. Il configure les variables d'environnement, les volumes pour la persistance des données, les dépendances entre services, et expose les ports nécessaires. Un réseau bridge personnalisé est également créé pour faciliter la communication entre les services.
 
-## Execution du docker compose
+## Exécution avec Docker Compose
+
 1. **Execution:**
+
 ```powershell
 $ docker-compose up --build
 time="2025-03-23T16:13:41Z" level=warning msg="C:\\Users\\dell\\Documents\\Devops\\student_list\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
@@ -252,7 +254,7 @@ website-1     | 172.20.0.1 - - [23/Mar/2025:16:14:35 +0000] "GET / HTTP/1.1" 200
 
 > L'image montre l'interface web qui interagit avec notre API. Cette page affiche les données des étudiants avec leurs âges, récupérées depuis l'API Python, démontrant que l'architecture multi-conteneurs fonctionne correctement.
 
-## Docker registry
+## Mise en Place d'un Registre Docker Privé
 
 ```yml
 version: '3.8'
@@ -287,7 +289,96 @@ volumes:
 
 > Ce fichier docker-compose configure un registre Docker privé avec une interface utilisateur web. Il définit deux services : un registre Docker standard sur le port 5000 avec les en-têtes CORS appropriés, et une interface utilisateur graphique accessible sur le port 8080. Un volume persistant "registry-data" est créé pour stocker les images Docker de manière durable.
 
+## Execution et test du docker compose registry
 
+1. **Execution du docker build**
 
+```powershell
+dell@DESKTOP-1FIQQ8A MINGW64 ~/Documents/Devops/student_list (majidi)
+$ docker-compose -f docker-compose-registry.yml up -d
+time="2025-03-23T20:45:31Z" level=warning msg="C:\\Users\\dell\\Documents\\Devops\\student_list\\docker-compose-registry.yml: th
+will be ignored, please remove it to avoid potential confusion"                                                                 [+] Running 3/3
+ ✔ Network student_list_default  Created                                       0.1s
+ ✔ Container private-registry    Started                                       0.9s
+ ✔ Container registry-ui         Started                                       1.3s
 
+```
+> Cette commande lance notre registre Docker privé et son interface utilisateur en mode détaché (en arrière-plan). Le fichier docker-compose-registry.yml est utilisé pour définir les services, et les conteneurs sont créés et démarrés avec succès.
 
+2. **Ajout tag de l'image**
+
+```powershell
+dell@DESKTOP-1FIQQ8A MINGW64 ~/Documents/Devops/student_list (majidi)
+$ docker tag api:1.0 localhost:5000/api:1.0
+```
+> Cette commande ajoute un tag à notre image API pour la préparer au push vers notre registre local. Le format "localhost:5000" indique que l'image sera envoyée au registre Docker s'exécutant sur le port 5000 de la machine locale.
+
+3. **Push l'image**
+
+```powershell
+$ docker push localhost:5000/api:1.0
+The push refers to repository [localhost:5000/api]
+4748f1c3239c: Pushed
+5e4e21ea7d04: Pushed
+a2e1e233599c: Pushed
+0beb01b68673: Pushed
+819d305a9b22: Pushed
+f3fe20f4bc70: Pushed
+42ad9c7e8b94: Pushed
+3b1c264c0ad4: Pushed
+0ebfe287e976: Pushed
+e073bbb7fb4c: Pushed
+42ad9c7e8b94: Pushed
+3b1c264c0ad4: Pushed
+0ebfe287e976: Pushed
+e073bbb7fb4c: Pushed
+3b1c264c0ad4: Pushed
+0ebfe287e976: Pushed
+e073bbb7fb4c: Pushed
+0ebfe287e976: Pushed
+e073bbb7fb4c: Pushed
+e073bbb7fb4c: Pushed
+a11e135762f0: Pushed
+a11e135762f0: Pushed
+ac8bb7e1a323: Pushed
+d5910363b24a: Pushed
+b1e7e053c9f6: Pushed
+1.0: digest: sha256:fbe74239aed2271b2893820d1f30edc8a195004e1861d9378d93b2dda99c40dd size: 856
+```
+> Cette commande envoie l'image taguée vers notre registre Docker privé. Les logs montrent que chaque couche de l'image est téléversée avec succès vers le registre local.
+
+4. **Verification du registre**
+
+- En utilisant la commande `curl`.
+
+```powershell
+$ curl http://localhost:5000/v2/_catalog
+{"repositories":["api"]}
+```
+> Cette requête curl interroge l'API du registre Docker pour lister tous les dépôts disponibles. La réponse confirme que notre image "api" est bien présente dans le registre.
+
+- En utilisant Registry UI.
+
+<div>
+
+![Registry_UI](registry_ui.png)
+
+</div>
+
+> L'image montre l'interface utilisateur web du registre Docker, confirmant visuellement que notre image api:1.0 a été correctement poussée et est maintenant stockée dans notre registre privé.
+
+## Conclusion
+
+Ce mini-projet Docker a permis de mettre en œuvre plusieurs concepts fondamentaux de la conteneurisation et de l'orchestration d'applications. À travers la réalisation des différentes étapes, nous avons acquis une expérience pratique sur :
+
+1. **La création d'images Docker** via un Dockerfile bien structuré, intégrant les bonnes pratiques en termes de couches, de dépendances et de configuration.
+
+2. **La gestion des volumes et de la persistance des données**, démontrant comment les données peuvent survivre au cycle de vie des conteneurs.
+
+3. **L'orchestration multi-conteneurs** avec Docker Compose, illustrant comment configurer et faire communiquer différents services (API Python et serveur web PHP) au sein d'un même réseau isolé.
+
+4. **La mise en place d'un registre Docker privé**, essentielle pour gérer et distribuer des images personnalisées dans un environnement d'entreprise ou de développement collaboratif.
+
+Ce projet souligne l'importance de Docker dans le développement moderne, où la reproductibilité des environnements, l'isolation des applications et la portabilité sont devenues des exigences essentielles. La maîtrise de ces concepts constitue un atout majeur pour tout professionnel de la DevOps et du développement logiciel.
+
+Les compétences acquises ici forment une base solide pour aborder des problématiques plus complexes comme l'intégration continue, le déploiement continu et l'orchestration à grande échelle avec des outils comme Kubernetes.
