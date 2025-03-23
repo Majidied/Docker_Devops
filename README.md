@@ -94,7 +94,6 @@ $ docker build -t api:1.0 simple_api/
 - Première tentative (Erreur liée à un fichier manquant `student_age.json`)
 
 ```powershell
-docker run --name mytest -p 5000:5000 api:1.0
 $ docker run --name mytest -p 5000:5000 api:1.0
 Traceback (most recent call last):
   File "student_age.py", line 33, in <module>
@@ -104,7 +103,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '/data/student_age.json'
 
 - Deuxième tentative après avoir copié le fichier dans le conteneur
 
-```bash
+```zsh
 dell@DESKTOP-1FIQQ8A MINGW64 ~/Documents/Devops/student_list (majidi)
 $ docker cp simple_api/student_age.json mytest:/data
 Successfully copied 2.05kB to mytest:/data
