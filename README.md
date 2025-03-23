@@ -228,7 +228,8 @@ website-1     | 172.20.0.1 - - [23/Mar/2025:16:14:35 +0000] "GET / HTTP/1.1" 200
 ```
 
 2. **Resultat:**
-<div style="text-align: center;">
+
+<div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
 ![Resultat](image.png)
 
