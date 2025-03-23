@@ -139,3 +139,54 @@ FileNotFoundError: [Errno 2] No such file or directory: '/data/student_age.json'
 ```
 
 4. Test avec la commande `curl`:
+
+```powershell
+$ curl -u root:root -X GET http://localhost:5000/supmit/api/v1.0/get_student_ages
+{
+  "student_ages": {
+    "Ahmed": "20",
+    "Amine": "20",
+    "Hiba": "21",
+    "Meryem": "23",
+    "Omar": "20",
+    "Sara": "23"
+  }
+}
+```
+
+## Creation du fichier Docker-compose
+
+<details>
+  <summary>Clicker pour afficher le code <strong>docker-compose.yml</strong></summary>
+
+```yml
+version: "3.8"
+
+services:
+  website:
+    image: php:apache
+    environment:
+      - USERNAME=root
+      - PASSWORD=root
+    volumes:
+      - ./website:/var/www/html
+    depends_on:
+      - simple-api
+    ports:
+      - "80:80"
+      
+  simple-api:
+    image: api:1.0
+    volumes:
+      - ./simple-api/student_age.json:/data/student_age.json
+    ports:
+      - "5000:5000"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+
+```
+</details>
