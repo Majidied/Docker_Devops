@@ -33,7 +33,9 @@
 ```Dockerfile
     EXPOSE 5000
 ```
- 8. Startup Command: _Specifies that the container should run the `student_age.py` script using Python3 as its main process._
+8. Startup Command: _Specifies that the container should run the `student_age.py` script using Python3 as its main process._
 ```Dockerfile
     CMD [ "python3", "student_age.py" ]
 ```
+
+[./simple_api/Dockerfile]{Dockerfile}
