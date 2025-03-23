@@ -38,4 +38,4 @@
     CMD [ "python3", "student_age.py" ]
 ```
 
-[./simple_api/Dockerfile]{Dockerfile}
+[Dockerfile](./simple_api/Dockerfile)
