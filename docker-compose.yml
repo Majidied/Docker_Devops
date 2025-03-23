@@ -16,7 +16,7 @@ services:
   simple-api:
     image: api:1.0
     volumes:
-      - ./simple-api/student_age.json:/data/student_age.json
+      - ./simple_api/student_age.json:/data/student_age.json
     ports:
       - "5000:5000"
     networks:
