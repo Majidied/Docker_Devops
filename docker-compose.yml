@@ -14,7 +14,7 @@ services:
       - "80:80"
       
   simple-api:
-    image: api:1.0
+    build: ./simple_api
     volumes:
       - ./simple_api/student_age.json:/data/student_age.json
     ports:
