@@ -43,6 +43,8 @@ RUN mkdir -p /data
 
 COPY student_age.json /data/student_age.json
 
+VOLUME [ "/data" ]
+
 EXPOSE 5000
 
 CMD [ "python3", "student_age.py" ]
