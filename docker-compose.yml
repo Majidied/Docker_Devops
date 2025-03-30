@@ -16,7 +16,9 @@ services:
   simple-api:
     build: ./simple_api
     volumes:
-      - ./simple_api/student_age.json:/data/student_age.json
+      - type: bind
+        source: ./simple_api/student_age.json
+        target: /data/student_age.json
     ports:
       - "5000:5000"
     networks:
