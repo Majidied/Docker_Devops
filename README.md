@@ -681,6 +681,15 @@ services:
 
 > Le fichier docker-compose.yml définit deux services : un backend (Flask) et un frontend (PHP). Le backend écoute sur le port 5000 et utilise un volume pour stocker les données, tandis que le frontend expose le port 80 et dépend du backend pour démarrer.
 
+11.  **Succès du Déploiement via Jenkins Pipeline   :**
+<div style="text-align: center; display: flex; justify-content: center; align-items: center;">
+
+![jenkins](jenkins.png)
+
+</div>
+
+> Le pipeline Jenkins a exécuté toutes les étapes avec succès, de la récupération du code à partir de GitHub jusqu’au déploiement final sur AWS EC2. Chaque phase, incluant la construction, le push des images Docker et le déploiement, s’est terminée sans erreur.
+
 11.  **Resultat de deployement    :**
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
