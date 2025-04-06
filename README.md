@@ -681,3 +681,11 @@ services:
 
 > Le fichier docker-compose.yml définit deux services : un backend (Flask) et un frontend (PHP). Le backend écoute sur le port 5000 et utilise un volume pour stocker les données, tandis que le frontend expose le port 80 et dépend du backend pour démarrer.
 
+11.  **Resultat de deployement    :**
+<div style="text-align: center; display: flex; justify-content: center; align-items: center;">
+
+![deploye](deploye.png)
+
+</div>
+
+> Après l’exécution complète du pipeline Jenkins, l’application web a été déployée avec succès et est accessible via l’adresse http://13.61.3.10/. La page d’accueil s’affiche correctement, confirmant que les conteneurs Docker pour le frontend et le backend sont opérationnels sur l’instance EC2.
