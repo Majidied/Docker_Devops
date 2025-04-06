@@ -40,7 +40,7 @@ COPY requirements.txt /
 RUN pip3 install -r requirements.txt
 
 RUN mkdir /data
-
+COPY student_age.json /data/
 VOLUME [ "/data" ]
 
 EXPOSE 5000
