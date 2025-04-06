@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Cloner le Dépôt') {
             steps {
-                git branch: 'main', url: 'https://github.com/sawssan02/Devops.git'
+                git branch: 'main', url: 'https://github.com/Majidied/Docker_Devops.git'
             }
         }
 
