@@ -433,6 +433,7 @@ Les compétences acquises ici forment une base solide pour aborder des probléma
 ![Instance](instance.png)
 
 </div>
+
 > Création d'une nouvelle instance EC2
 Dans le cadre de la mise en place de l'environnement de déploiement pour le projet CI/CD, une nouvelle instance EC2 a été créée sur AWS. L'instance Jenkins-Server a été déployée en utilisant l'image de machine AMI Amazon Linux 2023, choisie pour sa compatibilité avec les outils nécessaires à la configuration de Jenkins et Docker. Le type d'instance sélectionné est t3.micro, un modèle d'instance léger et performant, adapté pour les environnements de test et de développement. Une paire de clés JenkinsDocker a été générée et associée à l'instance, permettant une connexion SSH sécurisée.
 
@@ -442,6 +443,7 @@ Dans le cadre de la mise en place de l'environnement de déploiement pour le pro
 ![Regle](regle.png)
 
 </div>
+
 > Pour assurer l'accès sécurisé aux services sur l'instance EC2, plusieurs règles entrantes ont été configurées dans le groupe de sécurité associé à l'instance. Ces règles définissent les types de trafic autorisés à atteindre l'instance en fonction de leur protocole et des ports utilisés.
 
 ```powershell
