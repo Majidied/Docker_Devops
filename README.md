@@ -424,3 +424,258 @@ Ce mini-projet Docker a permis de mettre en œuvre plusieurs concepts fondamenta
 Ce projet souligne l'importance de Docker dans le développement moderne, où la reproductibilité des environnements, l'isolation des applications et la portabilité sont devenues des exigences essentielles. La maîtrise de ces concepts constitue un atout majeur pour tout professionnel de la DevOps et du développement logiciel.
 
 Les compétences acquises ici forment une base solide pour aborder des problématiques plus complexes comme l'intégration continue, le déploiement continu et l'orchestration à grande échelle avec des outils comme Kubernetes.
+## Deployement de l'application web dans AWS
+
+1.  **Création d'une nouvelle instance EC2 :** 
+
+<div style="text-align: center; display: flex; justify-content: center; align-items: center;">
+
+![Instance](instance.png)
+
+</div>
+> Création d'une nouvelle instance EC2
+Dans le cadre de la mise en place de l'environnement de déploiement pour le projet CI/CD, une nouvelle instance EC2 a été créée sur AWS. L'instance Jenkins-Server a été déployée en utilisant l'image de machine AMI Amazon Linux 2023, choisie pour sa compatibilité avec les outils nécessaires à la configuration de Jenkins et Docker. Le type d'instance sélectionné est t3.micro, un modèle d'instance léger et performant, adapté pour les environnements de test et de développement. Une paire de clés JenkinsDocker a été générée et associée à l'instance, permettant une connexion SSH sécurisée.
+
+2.  **Règles Entrantes :** 
+<div style="text-align: center; display: flex; justify-content: center; align-items: center;">
+
+![Regle](regle.png)
+
+</div>
+> Pour assurer l'accès sécurisé aux services sur l'instance EC2, plusieurs règles entrantes ont été configurées dans le groupe de sécurité associé à l'instance. Ces règles définissent les types de trafic autorisés à atteindre l'instance en fonction de leur protocole et des ports utilisés.
+
+```powershell
+sawssan@LAPTOP-560DSSV4 MINGW64 ~/Downloads (main)
+$ chmod 400 JenkinsDocker.pem
+```
+> La commande chmod 400 JenkinsDocker.pem a été exécutée pour modifier les permissions du fichier de clé privée SSH, garantissant ainsi que seul le propriétaire puisse accéder à la clé et que les autres utilisateurs soient restreints, conformément aux exigences de sécurité d'AWS.
+
+```powershell
+C:\Users\sawssan\Downloads>ssh -i JenkinsDocker.pem ec2-user@13.61.3.10
+
+A newer release of "Amazon Linux" is available.
+  Version 2023.7.20250331:
+Run "/usr/bin/dnf check-release-update" for full release and version update info
+   ,     #_
+   ~\_  ####_        Amazon Linux 2023
+  ~~  \_#####\
+  ~~     \###|
+  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
+   ~~       V~' '->
+    ~~~         /
+      ~~._.   _/
+         _/ _/
+       _/m/'
+Last login: Sat Apr  5 19:40:32 2025 from 196.70.194.42
+```
+> La connexion à l'instance EC2 a été établie avec succès en utilisant la commande SSH ssh -i JenkinsDocker.pem ec2-user@13.61.3.10. Un message d'information a été affiché, indiquant qu'une nouvelle version d'Amazon Linux est disponible, mais cela n'a pas affecté l'accès à l'instance.
+
+
+3.  **Installer Maven  :** 
+
+```powershell
+[ec2-user@ip-172-31-38-118 ~]$ sudo su
+[root@ip-172-31-38-118 ec2-user]# sudo yum install maven
+Amazon Linux 2023 Kernel Livepatch repository                                                                 149 kB/s |  15 kB     00:00
+Dependencies resolved.
+
+
+==============================================================================================================================================
+ Package                                             Architecture       Version                                 Repository               Size
+==============================================================================================================================================
+Installing:
+ maven                                               noarch             1:3.8.4-3.amzn2023.0.5                  amazonlinux              18 k
+Installing dependencies:
+ alsa-lib                                            x86_64             1.2.7.2-1.amzn2023.0.2                  amazonlinux             504 k
+ apache-commons-cli                                  noarch             1.5.0-3.amzn2023.0.3                    amazonlinux              76 k
+ apache-commons-codec                                noarch             1.15-6.amzn2023.0.3                     amazonlinux             303 k
+ apache-commons-io                                   noarch             1:2.8.0-7.amzn2023.0.4                  amazonlinux             284 k
+ apache-commons-lang3                                noarch             3.12.0-7.amzn2023.0.3                   amazonlinux             559 k
+ atinject                                            noarch             1.0.5-3.amzn2023.0.3                    amazonlinux              23 k
+ cairo                                               x86_64             1.18.0-4.amzn2023.0.1                   amazonlinux             718 k
+ cdi-api                                             noarch             2.0.2-6.amzn2023.0.3                    amazonlinux              54 k
+ dejavu-sans-fonts                                   noarch             2.37-16.amzn2023.0.2                    amazonlinux             1.3 M
+ dejavu-sans-mono-fonts                              noarch             2.37-16.amzn2023.0.2                    amazonlinux             467 k
+ dejavu-serif-fonts                                  noarch             2.37-16.amzn2023.0.2                    amazonlinux             1.0 M
+ fontconfig                                          x86_64             2.13.94-2.amzn2023.0.2                  amazonlinux             273 k
+ fonts-filesystem                                    noarch             1:2.0.5-12.amzn2023.0.2                 amazonlinux             9.5 k
+ freetype                                            x86_64             2.13.2-5.amzn2023.0.1                   amazonlinux             423 k
+ google-guice                                        noarch             4.2.3-8.amzn2023.0.6                    amazonlinux             473 k
+ google-noto-fonts-common                            noarch             20201206-2.amzn2023.0.2                 amazonlinux              15 k
+ google-noto-sans-vf-fonts                           noarch             20201206-2.amzn2023.0.2                 amazonlinux             492 k
+ graphite2                                           x86_64             1.3.14-7.amzn2023.0.2                   amazonlinux              97 k
+ guava                                               noarch             31.0.1-3.amzn2023.0.6                   amazonlinux             2.4 M
+ harfbuzz                                            x86_64             7.0.0-2.amzn2023.0.2                    amazonli
+ [root@ip-172-31-38-118 ec2-user]# mvn -version
+Apache Maven 3.8.4 (Red Hat 3.8.4-3.amzn2023.0.5)
+Maven home: /usr/share/maven
+Java version: 17.0.14, vendor: Amazon.com Inc., runtime: /usr/lib/jvm/java-17-amazon-corretto.x86_64
+Default locale: en, platform encoding: UTF-8
+OS name: "linux", version: "6.1.131-143.221.amzn2023.x86_64", arch: "amd64", family: "unix"
+[root@ip-172-31-38-118 ec2-user]# java -version
+openjdk version "17.0.14" 2025-01-21 LTS
+OpenJDK Runtime Environment Corretto-17.0.14.7.1 (build 17.0.14+7-LTS)
+OpenJDK 64-Bit Server VM Corretto-17.0.14.7.1 (build 17.0.14+7-LTS, mixed mode, sharing)
+```
+> Pour installer Maven sur l'instance EC2, la commande sudo yum install maven a été exécutée avec les privilèges administratifs. Cela permet de disposer de Maven, un outil essentiel pour la gestion des dépendances et la compilation des projets Java.
+
+4.  **Instalation Git  :** 
+
+```powershell
+[root@ip-172-31-38-118 ec2-user]# sudo yum -y install git
+Last metadata expiration check: 0:06:05 ago on Sun Apr  6 01:54:31 2025.
+Dependencies resolved.
+==============================================================================================================================================
+ Package                            Architecture             Version                                      Repository                     Size
+==============================================================================================================================================
+Installing:
+ git                                x86_64                   2.47.1-1.amzn2023.0.2                        amazonlinux                    54 k
+Installing dependencies:
+ git-core                           x86_64                   2.47.1-1.amzn2023.0.2                        amazonlinux                   4.7 M
+ git-core-doc                       noarch                   2.47.1-1.amzn2023.0.2                        amazonlinux                   2.8 M
+ perl-Error                         noarch                   1:0.17029-5.amzn2023.0.2                     amazonlinux                    41 k
+ perl-File-Find                     noarch                   1.37-477.amzn2023.0.6                        amazonlinux                    26 k
+ perl-Git                           noarch                   2.47.1-1.amzn2023.0.2                        amazonlinux                    42 k
+ perl-TermReadKey                   x86_64                   2.38-9.amzn2023.0.2                          amazonlinux                    36 k
+ perl-lib                           x86_64                   0.65-477.amzn2023.0.6                        amazonlinux                    15 k
+[root@ip-172-31-38-118 ec2-user]# git --version
+git version 2.47.1
+[root@ip-172-31-38-118 ec2-user]# git config --global user.name "Sawssan"
+[root@ip-172-31-38-118 ec2-user]# git config --global user.email "sawssanatiq@gmail.com"
+```
+
+> Git a été installé sur l'instance EC2 en utilisant la commande sudo yum -y install git. La version installée est 2.47.1, et la configuration de l'utilisateur a été définie avec la commande git config --global pour inclure le nom d'utilisateur Sawssan et l'adresse e-mail sawssanatiq@gmail.com. Cette configuration permet d'utiliser Git pour le contrôle de version dans le cadre du projet.
+
+5.  **Installation jenkins  :**
+
+```powershell
+[root@ip-172-31-38-118 ec2-user]# sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm -- import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+--2025-04-06 02:06:48--  https://pkg.jenkins.io/redhat-stable/jenkins.repo
+Resolving pkg.jenkins.io (pkg.jenkins.io)... 151.101.86.133, 2a04:4e42:14::645
+Connecting to pkg.jenkins.io (pkg.jenkins.io)|151.101.86.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 85
+Saving to: ‘/etc/yum.repos.d/jenkins.repo’
+
+/etc/yum.repos.d/jenkins.repo       100%[=================================================================>]      85  --.-KB/s    in 0s
+
+2025-04-06 02:06:48 (744 KB/s) - ‘/etc/yum.repos.d/jenkins.repo’ saved [85/85]
+
+RPM version 4.16.1.3
+Copyright (C) 1998-2002 - Red Hat, Inc.
+This program may be freely redistributed under the terms of the GNU GPL
+[root@ip-172-31-37-139 ec2-user]# sudo yum -y install jenkins
+Jenkins-stable                                                                                                453 kB/s |  30 kB     00:00
+Dependencies resolved.
+==============================================================================================================================================
+ Package                          Architecture                    Version                              Repository                        Size
+==============================================================================================================================================
+Installing:
+ jenkins                          noarch                          2.492.3-1.1                          jenkins                           92 M
+[root@ip-172-31-38-118 ec2-user]# sudo systemctl start jenkins
+[root@ip-172-31-38-118 ec2-user]#  sudo systemctl enable --now jenkins
+```
+
+> Jenkins a été installé sur l'instance EC2 en utilisant le dépôt officiel pour Red Hat via les commandes wget et rpm --import. Après l'installation réussie de la version 2.492.3-1.1 avec yum, Jenkins a été démarré avec la commande sudo systemctl start jenkins et configuré pour démarrer automatiquement au démarrage du système grâce à sudo systemctl enable --now jenkins.
+
+
+6.  **Installation Docker   :**
+
+```powershell
+[root@ip-172-31-38-118 ec2-user]# sudo yum update -y
+Last metadata expiration check: 0:11:16 ago on Sun Apr  6 02:07:02 2025.
+Dependencies resolved.
+Nothing to do.
+Complete!
+[root@ip-172-31-38-118 ec2-user]# sudo yum install docker -y
+Last metadata expiration check: 0:12:37 ago on Sun Apr  6 02:07:02 2025.
+Dependencies resolved.
+==============================================================================================================================================
+ Package                                 Architecture            Version                                   Repository                    Size
+==============================================================================================================================================
+Installing:
+ docker                                  x86_64                  25.0.8-1.amzn2023.0.1                     amazonlinux                   44 M
+Installing dependencies:
+ containerd                              x86_64                  1.7.27-1.amzn2023.0.1                     amazonlinux                   37 M
+ iptables-libs                           x86_64                  1.8.8-3.amzn2023.0.2                      amazonlinux                  401 k
+ iptables-nft                            x86_64                  1.8.8-3.amzn2023.0.2                      amazonlinux                  183 k
+ libcgroup                               x86_64                  3.0-1.amzn2023.0.1                        amazonlinux                   75 k
+ libnetfilter_conntrack                  x86_64                  1.0.8-2.amzn2023.0.2                      amazonlinux                   58 k
+ libnfnetlink                            x86_64                  1.0.1-19.amzn2023.0.2                     amazonlinux                   30 k
+ libnftnl                                x86_64                  1.2.2-2.amzn2023.0.2                      amazonlinux                   84 k
+ pigz                                    x86_64                  2.5-1.amzn2023.0.3                        amazonlinux                   83 k
+ runc                                    x86_64                  1.2.4-1.amzn2023.0.1                      amazonlinux                  3.4 M
+[root@ip-172-31-38-118 ec2-user]# sudo systemctl start docker
+[root@ip-172-31-38-118 ec2-user]# sudo systemctl enable --now docker
+Created symlink /etc/systemd/system/multi-user.target.wants/docker.service → /usr/lib/systemd/system/docker.service.
+[root@ip-172-31-38-118 ec2-user]# sudo useradd jenkins
+[root@ip-172-31-38-118 ec2-user]# sudo usermod -aG docker jenkins
+[root@ip-172-31-38-118 ec2-user]# docker -v
+Docker version 25.0.8, build 0bab007
+```
+> Docker a été installé sur l'instance EC2 en utilisant la commande sudo yum install docker -y. Après l'installation de la version 25.0.8, Docker a été démarré avec sudo systemctl start docker et configuré pour se lancer automatiquement au démarrage du système avec sudo systemctl enable --now docker. Un utilisateur jenkins a été créé et ajouté au groupe docker, ce qui permet à Jenkins d'interagir avec Docker pour le déploiement des conteneurs. La version installée de Docker est 25.0.8.
+
+
+************************************************************
+7.  **La configuration du projet Jenkins    :**
+<div style="text-align: center; display: flex; justify-content: center; align-items: center;">
+
+![image1](image1.png)
+
+</div>
+<div style="text-align: center; display: flex; justify-content: center; align-items: center;">
+
+![image2](image2.png)
+
+</div>
+<div style="text-align: center; display: flex; justify-content: center; align-items: center;">
+
+![image3](image3.png)
+
+</div>
+
+8.  **Pipeline Jenkinsfile   :**
+
+📎 **Fichier Dockerfile :** [Jenkinsfile](./Jenkinsfile)
+
+> Le pipeline Jenkins défini automatise la construction et le déploiement des images Docker pour les applications frontend et backend. Il inclut des étapes telles que le clonage du dépôt Git, la construction des images Docker, leur poussée sur Docker Hub, puis le déploiement sur une instance EC2 d'AWS avec l'usage de SSH et SCP pour transférer les fichiers et exécuter les conteneurs.
+
+9.  **Création du Fichier Dockerfile   :**
+
+📎 **Fichier Dockerfile :** [Dockerfile](./website/Dockerfile)
+
+>Le Dockerfile utilise l'image PHP avec Apache, copie le fichier index.php dans le répertoire par défaut d'Apache, et expose le port 80 pour accéder à l'application. Ce fichier permet de déployer rapidement une application PHP sur un serveur Apache.
+
+10.  **Modification de docker-composer   :**
+
+<details>
+  <summary>Clicker pour afficher le code <strong><a href="./docker-compose.yml">docker-compose.yml</a></strong></summary>
+
+```yml
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: ./simple_api  # Dossier contenant le Dockerfile Flask
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/data  # Montage du répertoire des données
+    environment:
+      - student_age_file_path=/data/student_age.json
+
+  frontend:
+    build:
+      context: ./website # Dossier contenant le Dockerfile PHP
+    ports:
+      - "80:80"
+    depends_on:
+      - backend  # Attendre que le backend soit lancé
+
+```
+</details>
+
+> Le fichier docker-compose.yml définit deux services : un backend (Flask) et un frontend (PHP). Le backend écoute sur le port 5000 et utilise un volume pour stocker les données, tandis que le frontend expose le port 80 et dépend du backend pour démarrer.
+
