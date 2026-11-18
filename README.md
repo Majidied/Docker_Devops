@@ -1,3 +1,54 @@
+# Docker & Jenkins CI/CD Pipeline — Multi-Container Web App on AWS EC2
+
+![Docker](https://img.shields.io/badge/Docker-Multi--Container-2496ED?logo=docker&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker_Compose-Orchestration-2496ED?logo=docker&logoColor=white)
+![Jenkins](https://img.shields.io/badge/CI%2FCD-Jenkins-D24939?logo=jenkins&logoColor=white)
+![Flask](https://img.shields.io/badge/Backend-Python_Flask-000000?logo=flask&logoColor=white)
+![PHP](https://img.shields.io/badge/Frontend-PHP_Apache-777BB4?logo=php&logoColor=white)
+![AWS EC2](https://img.shields.io/badge/Cloud-AWS%20EC2-FF9900?logo=amazon-aws&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
+> **Executive Summary:** Containerized a Python Flask REST API ([`simple_api/`](simple_api/)) and a PHP web frontend ([`website/`](website/)) orchestrated with Docker Compose, persistent `/data` volumes, a private Docker Registry (`docker-compose-registry.yml`), and an automated **Jenkins CI/CD pipeline** ([`Jenkinsfile`](Jenkinsfile)) that builds images, pushes to Docker Hub, and deploys to **AWS EC2**.
+
+## CI/CD & Container Architecture
+
+```mermaid
+flowchart LR
+    A[GitHub Push<br/>main] --> B[Jenkins Pipeline<br/>Jenkinsfile]
+    B --> C[Docker Build<br/>website PHP + simple_api Flask]
+    C --> D[Docker Hub / Private Registry<br/>registry:2 + registry-ui]
+    D --> E[AWS EC2 Deployment<br/>SSH + docker run]
+    E --> F[Persistent Volume<br/>/data/student_age.json]
+```
+
+## Quick Start (Local Docker Compose)
+
+```bash
+git clone https://github.com/Majidied/Docker_Devops.git
+cd Docker_Devops
+cp .env.example .env
+mkdir -p data && cp simple_api/student_age.json data/student_age.json
+docker compose up -d --build
+```
+
+- Frontend (PHP): `http://localhost:8080`
+- Backend API (Flask): `http://localhost:5000/supmit/api/v1.0/get_student_ages`
+
+### Configuration (`API_URL` & Auth)
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `API_URL` | `http://backend:5000/supmit/api/v1.0/get_student_ages` | Backend URL consumed by `website/index.php` |
+| `API_USERNAME` | `admin` | HTTP Basic Auth username |
+| `API_PASSWORD` | `changeme` | HTTP Basic Auth password |
+| `FLASK_DEBUG` | `false` | Enables Flask debug mode only when explicitly `'true'` |
+
+## Project Status
+
+- **Status:** **Completed** academic DevOps lab — externalized API URL/credentials, added `.gitignore`, MIT [`LICENSE`](LICENSE), and [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (`docker compose config`, `hadolint`, syntax checks), and organized all 9 deployment screenshots in [`docs/images/`](docs/images/).
+
+---
+
 # Compte Rendu - Mini Projet Docker
 
 ## Équipe
@@ -284,7 +335,7 @@ website-1     | 172.20.0.1 - - [23/Mar/2025:16:14:35 +0000] "GET / HTTP/1.1" 200
 
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
-![Resultat](result.png)
+![Resultat](docs/images/result.png)
 
 </div>
 
@@ -401,7 +452,7 @@ $ curl http://localhost:5000/v2/_catalog
 
 <div>
 
-![Registry_UI](registry_ui.png)
+![Registry_UI](docs/images/registry_ui.png)
 
 </div>
 
@@ -430,7 +481,7 @@ Les compétences acquises ici forment une base solide pour aborder des probléma
 
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
-![Instance](instance.png)
+![Instance](docs/images/instance.png)
 
 </div>
 
@@ -440,7 +491,7 @@ Dans le cadre de la mise en place de l'environnement de déploiement pour le pro
 2.  **Règles Entrantes :** 
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
-![Regle](regle.png)
+![Regle](docs/images/regle.png)
 
 </div>
 
@@ -453,7 +504,7 @@ $ chmod 400 JenkinsDocker.pem
 > La commande chmod 400 JenkinsDocker.pem a été exécutée pour modifier les permissions du fichier de clé privée SSH, garantissant ainsi que seul le propriétaire puisse accéder à la clé et que les autres utilisateurs soient restreints, conformément aux exigences de sécurité d'AWS.
 
 ```powershell
-C:\Users\sawssan\Downloads>ssh -i JenkinsDocker.pem ec2-user@13.61.3.10
+C:\Users\sawssan\Downloads>ssh -i JenkinsDocker.pem ec2-user@<EC2_PUBLIC_IP>
 
 A newer release of "Amazon Linux" is available.
   Version 2023.7.20250331:
@@ -470,7 +521,7 @@ Run "/usr/bin/dnf check-release-update" for full release and version update info
        _/m/'
 Last login: Sat Apr  5 19:40:32 2025 from 196.70.194.42
 ```
-> La connexion à l'instance EC2 a été établie avec succès en utilisant la commande SSH ssh -i JenkinsDocker.pem ec2-user@13.61.3.10. Un message d'information a été affiché, indiquant qu'une nouvelle version d'Amazon Linux est disponible, mais cela n'a pas affecté l'accès à l'instance.
+> La connexion à l'instance EC2 a été établie avec succès en utilisant la commande SSH ssh -i JenkinsDocker.pem ec2-user@<EC2_PUBLIC_IP>. Un message d'information a été affiché, indiquant qu'une nouvelle version d'Amazon Linux est disponible, mais cela n'a pas affecté l'accès à l'instance.
 
 
 3.  **Installer Maven  :** 
@@ -623,17 +674,17 @@ Docker version 25.0.8, build 0bab007
 7.  **La configuration du projet Jenkins    :**
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
-![image1](image1.png)
+![image1](docs/images/image1.png)
 
 </div>
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
-![image2](image2.png)
+![image2](docs/images/image2.png)
 
 </div>
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
-![image3](image3.png)
+![image3](docs/images/image3.png)
 
 </div>
 
@@ -684,7 +735,7 @@ services:
 11.  **Succès du Déploiement via Jenkins Pipeline   :**
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
-![jenkins](jenkins.png)
+![jenkins](docs/images/jenkins.png)
 
 </div>
 
@@ -693,8 +744,8 @@ services:
 11.  **Resultat de deployement    :**
 <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
 
-![deploye](deploye.png)
+![deploye](docs/images/deploye.png)
 
 </div>
 
-> Après l’exécution complète du pipeline Jenkins, l’application web a été déployée avec succès et est accessible via l’adresse http://13.61.3.10/. La page d’accueil s’affiche correctement, confirmant que les conteneurs Docker pour le frontend et le backend sont opérationnels sur l’instance EC2.
+> Après l’exécution complète du pipeline Jenkins, l’application web a été déployée avec succès et est accessible via l’adresse http://<EC2_PUBLIC_IP>/. La page d’accueil s’affiche correctement, confirmant que les conteneurs Docker pour le frontend et le backend sont opérationnels sur l’instance EC2.

@@ -1,20 +1,25 @@
-version: '3.7'
-
 services:
   backend:
     build:
-      context: ./simple_api  # Dossier contenant le Dockerfile Flask
+      context: ./simple_api
     ports:
       - "5000:5000"
     volumes:
-      - ./data:/data  # Montage du répertoire des données
+      - ./data:/data
     environment:
       - student_age_file_path=/data/student_age.json
+      - API_USERNAME=${API_USERNAME:-admin}
+      - API_PASSWORD=${API_PASSWORD:-changeme}
+      - FLASK_DEBUG=${FLASK_DEBUG:-false}
 
   frontend:
     build:
-      context: ./website # Dossier contenant le Dockerfile PHP
+      context: ./website
     ports:
-      - "80:80"
+      - "8080:80"
+    environment:
+      - API_URL=${API_URL:-http://backend:5000/supmit/api/v1.0/get_student_ages}
+      - API_USERNAME=${API_USERNAME:-admin}
+      - API_PASSWORD=${API_PASSWORD:-changeme}
     depends_on:
-      - backend  # Attendre que le backend soit lancé
+      - backend

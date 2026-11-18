@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE_FRONTEND = 'sawssan02/frontend:1.0'
         DOCKER_IMAGE_BACKEND = 'sawssan02/backend:1.0'
         DOCKER_REGISTRY = 'docker.io'
-        AWS_EC2_INSTANCE = 'ec2-user@13.61.3.10'
+        AWS_EC2_INSTANCE = "${env.AWS_EC2_HOST ?: 'ec2-user@<EC2_PUBLIC_IP>'}"
         EC2_PRIVATE_KEY = credentials('AWS_SSH_CREDENTIAL') 
     }
 

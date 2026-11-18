@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Compose, Hadolint & Syntax Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Docker Compose Configurations
+        run: |
+          docker compose -f docker-compose.yml config -q
+          docker compose -f docker-compose-registry.yml config -q
+
+      - name: Lint Backend Dockerfile (Hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: simple_api/Dockerfile
+          failure-threshold: error
+
+      - name: Lint Frontend Dockerfile (Hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: website/Dockerfile
+          failure-threshold: error
+
+      - name: Check Python & PHP Syntax
+        run: |
+          python3 -m py_compile simple_api/student_age.py
+          docker run --rm -v "${{ github.workspace }}/website:/app:ro" php:8.2-cli php -l /app/index.php
